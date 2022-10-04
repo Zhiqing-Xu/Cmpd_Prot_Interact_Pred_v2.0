@@ -398,8 +398,9 @@ if __name__ == "__main__":
                             "Ki_all_org",         # 9
                             "Ki_small",           # 10
                             "Ki_select",          # 11
+                            "KM_BRENDA",          # 12
                             ]                   
-    dataset_nme          = dataset_nme_list[6]
+    dataset_nme          = dataset_nme_list[12]
     data_folder          = Path("X_DataProcessing/")
     input_seqs_fasta_file = "X00_" + dataset_nme + ".fasta"
     #====================================================================================================#
