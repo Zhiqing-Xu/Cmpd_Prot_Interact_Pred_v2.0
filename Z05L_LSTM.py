@@ -89,11 +89,13 @@ class LSTM_dataset(data.Dataset):
         batch_size = len(embedding)
         emb_dim = embedding[0].shape[1]
         arra = np.full([batch_size, self.max_len, emb_dim], 0.0)
+        lengths = []
         for arr, seq in zip(arra, embedding):
             arrslice = tuple(slice(dim) for dim in seq.shape)
             arr[arrslice] = seq
+            lengths.append(seq.shape[0])
 
-        return {'seqs_embeddings': torch.from_numpy(arra), 'cmpd_encodings': torch.tensor(np.array(list(compound))), 'y_property': torch.tensor(np.array(list(target)))}
+        return {'seqs_embeddings': torch.from_numpy(arra), 'seqs_lens': torch.tensor(np.array(lengths)), 'cmpd_encodings': torch.tensor(np.array(list(compound))), 'y_property': torch.tensor(np.array(list(target)))}
 
 
 ###################################################################################################################
@@ -140,7 +142,10 @@ class SQembLSTM_CPenc_Model(nn.Module):
                  hid_dim: int,
                  latent_dim: int,
                  out_dim: int,
+                 cmpd_dim: int,
+                 max_len: int,
                  num_layers: int,
+                 last_hid: int,
                  dropout: float = 0.
                  ):
         super().__init__()
@@ -148,6 +153,12 @@ class SQembLSTM_CPenc_Model(nn.Module):
         self.encoder_LSTM = nn.LSTM(in_dim, hid_dim, batch_first=True, num_layers=num_layers)
         self.mean = nn.Linear(in_features=hid_dim*num_layers, out_features = latent_dim)
         self.log_variance = nn.Linear(in_features=hid_dim*num_layers, out_features = latent_dim)
+        #--------------------------------------------------#
+        self.fc_early = nn.Linear(max_len*latent_dim+cmpd_dim,1)
+        #--------------------------------------------------#
+        self.fc_1 = nn.Linear(int(2*max_len*latent_dim+cmpd_dim),last_hid)
+        self.fc_2 = nn.Linear(last_hid,last_hid)
+        self.fc_3 = nn.Linear(last_hid,1)
         
     def initial_hidden_vars(self, batch_size):
         hidden_cell = torch.zeros(num_layers, batch_size, hid_dim)
@@ -173,13 +184,25 @@ class SQembLSTM_CPenc_Model(nn.Module):
         
         return z, mean, log_var, hidden_encoder
     
-    def forward(self, x, lengths, hidden_encoder):
+    def forward(self, x, lengths, hidden_encoder, compound):
         max_length = x.shape[1]
         
         x = nn.utils.rnn.pack_padded_sequence(input=x, lengths=lengths, batch_first=True, enforce_sorted=False)
         z, mean, log_var, hidden_encoder = self.encoder(x, max_length, hidden_encoder)
         
-        return z
+        #--------------------------------------------------#
+        output = torch.cat( (z, compound) ,1)
+        #--------------------------------------------------#
+        single_conv = torch.cat( (z,compound) ,1)
+        single_conv = self.cls(self.fc_early(single_conv))
+        #--------------------------------------------------#
+        output = self.fc_1(output)
+        output = nn.functional.relu(output)
+        output = self.fc_2(output)
+        output = nn.functional.relu(output)
+        output = self.fc_3(output)
+        
+        return output, single_conv
         
         
 

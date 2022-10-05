@@ -207,6 +207,7 @@ if __name__ == "__main__":
     latent_dim   = 244      # 244
     out_dim    = 1      # 2
     num_layers   = 3      # 3
+    last_hid = 1024 # 1024
     dropout    = 0.1     # 0
     #====================================================================================================#
     seed = 42 # 42, 0, 1, 2, 3, 4
@@ -217,7 +218,7 @@ if __name__ == "__main__":
     torch.cuda.manual_seed_all(seed)
     #====================================================================================================#
     hyperparameters_dict = dict([])
-    for one_hyperpara in ["hid_dim", "latent_dim", "out_dim", "num_layers", "dropout"]:
+    for one_hyperpara in ["hid_dim", "latent_dim", "out_dim", "num_layers", "last_hid", "dropout"]:
         hyperparameters_dict[one_hyperpara] = locals()[one_hyperpara]
     #====================================================================================================#
     # If log_value is True, screen_bool will be changed.
@@ -330,8 +331,10 @@ if __name__ == "__main__":
                                   hid_dim  = hid_dim,
                                   latent_dim = latent_dim,
                                   out_dim  = out_dim, #2
+                                  cmpd_dim = X_cmpd_encodings_dim,
+                                  max_len = seqs_max_len,
                                   num_layers = num_layers,
-                                  max_len  = seqs_max_len,
+                                  last_hid  = last_hid,
                                   dropout  = dropout
                                   )
 
@@ -375,7 +378,7 @@ if __name__ == "__main__":
                   screen_bool          =  screen_bool   , 
                   results_sub_folder   =  results_sub_folder , 
                   output_file_header   =  output_file_header , 
-                  input_var_names_list =  ["seqs_embeddings" , "cmpd_encodings"] , 
+                  input_var_names_list =  ["seqs_embeddings" , "seqs_lens", "cmpd_encodings"] , 
                   target_name          =  "y_property"       , 
                   )
 

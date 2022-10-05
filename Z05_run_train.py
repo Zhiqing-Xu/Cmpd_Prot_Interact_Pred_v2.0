@@ -170,11 +170,16 @@ def run_train(model,
             elif type(model) == SQembConv_CPmpn_Model: # G
                 input_vars = [input_vars[0].double().cuda(), input_vars[1]]
             
+            elif type(model) == SQembLSTM_CPenc_Model: # L
+                states = model.initial_hidden_vars(len_train_loader)
+                input_vars = [input_vars[0].double().cuda(), input_vars[1].double().cuda(), input_vars[2].double().cuda(), states.double().cuda()]
+            
 
             target = one_seqs_cmpd_y_group[target_name]
             target = target.double().cuda()
+            
 
-            output, _ = model(*input_vars)
+            output,_ = model(*input_vars)
 
             loss = criterion(output, target.view(-1, 1))
             optimizer.zero_grad()
@@ -187,6 +192,7 @@ def run_train(model,
         y_real_valid = []
         #--------------------------------------------------#
         for one_seqs_cmpd_y_group in valid_loader:
+            len_valid_loader = len(valid_loader)
 
             input_vars = [one_seqs_cmpd_y_group[one_var] for one_var in input_var_names_list]
             if   type(model) == SQembConv_CPenc_Model: # A
@@ -203,6 +209,10 @@ def run_train(model,
 
             elif type(model) == SQembConv_CPmpn_Model: # G
                 input_vars = [input_vars[0].double().cuda(), input_vars[1]]
+            
+            elif type(model) == SQembLSTM_CPenc_Model: # L
+                states = model.initial_hidden_vars(len_valid_loader)
+                input_vars = [input_vars[0].double().cuda(), input_vars[1].double().cuda(), input_vars[2].double().cuda(), states.double().cuda()]
 
 
             output, _ = model(*input_vars)
@@ -221,6 +231,7 @@ def run_train(model,
         y_real = []
         #--------------------------------------------------#
         for one_seqs_cmpd_y_group in test_loader:
+            len_test_loader = len(test_loader)
 
             input_vars = [one_seqs_cmpd_y_group[one_var] for one_var in input_var_names_list]
             if   type(model) == SQembConv_CPenc_Model: # A
@@ -237,6 +248,10 @@ def run_train(model,
 
             elif type(model) == SQembConv_CPmpn_Model: # G
                 input_vars = [input_vars[0].double().cuda(), input_vars[1]]
+            
+            elif type(model) == SQembLSTM_CPenc_Model: # L
+                states = model.initial_hidden_vars(len_test_loader)
+                input_vars = [input_vars[0].double().cuda(), input_vars[1].double().cuda(), input_vars[2].double().cuda(), states.double().cuda()]
 
 
             output, _ = model(*input_vars)
