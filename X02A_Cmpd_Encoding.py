@@ -272,7 +272,7 @@ if __name__ == "__main__":
     #--------------------------------------------------#
     # Select compound encodings
     cmpd_encodings_list = ["ECFP2", "ECFP4", "ECFP6", "JTVAE", "MorganFP"]
-    cmpd_encodings      = cmpd_encodings_list[-1]
+    cmpd_encodings      = cmpd_encodings_list[2]
     #---------- ECFP
     ECFP_type = cmpd_encodings[-1] if cmpd_encodings in ["ECFP2", "ECFP4", "ECFP6",] else 2 # 2, 4, 6
     #---------- JTVAE

@@ -231,7 +231,7 @@ def output_formated_dataset(cmpd_df,
     # Get all compound SMILES.
     cmpd_list=[] # Non-unique SMILES
     cmpd_smiles_list=[] # Unique SMILES
-    cmpd_df_row_num = cmpd_df.shape[0]-1
+    cmpd_df_row_num = cmpd_df.shape[0]
     for i in range(cmpd_df_row_num):
         if cmpd_df.loc[i,"CMPD_SMILES"] not in cmpd_list:
             one_compound_smiles = GetUnqSmi.UNQSMI(cmpd_df.loc[i,"CMPD_SMILES"])
@@ -545,7 +545,7 @@ if __name__ == "__main__":
                         "KM_BRENDA",          # 12
                         "KM_RANA_1",          # 13
                         ] 
-    dataset_nme      = dataset_nme_list[12]
+    dataset_nme      = dataset_nme_list[6]
     #--------------------------------------------------#
     #                    dataset_nme           value_col                dataset_path
     data_info_dict   = {"phosphatase"      : ["Conversion"      , "phosphatase_chiral.csv" ,  350], 
@@ -560,7 +560,7 @@ if __name__ == "__main__":
                         "Ki_all_org"       : ["Ki_Value"        , "Ki_all_org.csv"         , 1000],
                         "Ki_small"         : ["Ki_Value"        , "Ki_small.csv"           , 1000], 
                         "Ki_select"        : ["Ki_Value"        , "Ki_select.csv"          , 1000],
-                        "KM_BRENDA"        : ["Log_Km_Value"    , "KM_BRENDA.csv"          , 2000],
+                        "KM_BRENDA"        : ["Km"    , "KM_BRENDA.csv"          , 2000],
                         "KM_RANA_1"        : ["Km"              , "KM_rana_1.csv"          , 2000],   
                         ""                 : [""                , ""                       , 2000],   
                        }

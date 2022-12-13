@@ -232,13 +232,12 @@ if __name__ == "__main__":
                         "kcat",               # 6
                         "kcat_mt",            # 7
                         "kcat_wt",            # 8
-                        "Ki_all_org"          # 9
-                        "Ki_small"            # 10
-                        "Ki_small",           # 10
+                        "Ki_all_org",          # 9
+                        "Ki_small",            # 10
                         "Ki_select",          # 11
                         "KM_BRENDA",          # 12
                         ]            
-    dataset_nme = dataset_nme_list[12]
+    dataset_nme = dataset_nme_list[6]
     data_folder = Path("X_DataProcessing/")
     properties_file = "X00_" + dataset_nme + "_compounds_properties_list.p"
     #--------------------------------------------------#

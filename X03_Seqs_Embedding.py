@@ -527,9 +527,9 @@ def X03_embedding_LM(dataset_nme,
     #                     MM     ,M Mb     dM   M  `YM'   MM                  MM     MM.   ,M9                        #
     #                   .JMMmmmmMMM P"Ybmmd"  .JML. `'  .JMML.              .JMML.   P^YbmdP'                         #
     ###################################################################################################################
-    if model_select == "ESM_1B":
+    if model_select == "ESM_2":
         #model, alphabet = torch.hub.load("facebookresearch/esm", "esm1b_t33_650M_UR50S")
-        model, alphabet = esm.pretrained.esm1b_t33_650M_UR50S()
+        model, alphabet = esm.pretrained.esm2_t33_650M_UR50D() #esm.pretrained.esm1b_t33_650M_UR50S()
         batch_converter = alphabet.get_batch_converter()
         data_set = []
         for seq_record in SeqIO.parse(input_file, "fasta"):
@@ -600,12 +600,12 @@ if __name__ == "__main__":
                         "Ki_select",          # 11
                         "KM_BRENDA",          # 12
                         ] 
-    dataset_nme      = dataset_nme_list[12]
+    dataset_nme      = dataset_nme_list[6]
     data_folder          = Path("X_DataProcessing/")
     input_seqs_fasta_file = "X00_" + dataset_nme + ".fasta"
     #====================================================================================================#
     # List Index:          [0]       [1]      [2]       [3]      [4]    [5]      [6]       [7]
-    models_list      = ["TAPE_FT", "BERT", "ALBERT", "Electra", "T5", "Xlnet", "ESM_1B", "TAPE"]
+    models_list      = ["TAPE_FT", "BERT", "ALBERT", "Electra", "T5", "Xlnet", "ESM_2", "TAPE"]
     model_select     = models_list[6] ##### !!!!! models_list[3] Electra deprecated !
     pretraining_name = "X01_" + dataset_nme + "_FT_inter_epoch5_trial_training.pt"
     #====================================================================================================#

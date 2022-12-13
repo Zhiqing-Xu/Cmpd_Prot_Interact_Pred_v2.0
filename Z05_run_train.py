@@ -109,6 +109,7 @@ from Z05B_SAtt import SQembWtLr_CPenc_Model # D
 
 
 from Z05G_Conv_Mpnn import SQembConv_CPmpn_Model # G
+from Z05L_LSTM import SQembLSTM_CPenc_Model # L
 
 
 
@@ -172,14 +173,14 @@ def run_train(model,
             
             elif type(model) == SQembLSTM_CPenc_Model: # L
                 states = model.initial_hidden_vars(len_train_loader)
-                input_vars = [input_vars[0].double().cuda(), input_vars[1].double().cuda(), input_vars[2].double().cuda(), states.double().cuda()]
+                input_vars = [input_vars[0].double().cuda(), input_vars[1].cuda(), input_vars[2].double().cuda(), states]
             
 
             target = one_seqs_cmpd_y_group[target_name]
             target = target.double().cuda()
             
 
-            output,_ = model(*input_vars)
+            output = model(*input_vars)
 
             loss = criterion(output, target.view(-1, 1))
             optimizer.zero_grad()
@@ -212,10 +213,10 @@ def run_train(model,
             
             elif type(model) == SQembLSTM_CPenc_Model: # L
                 states = model.initial_hidden_vars(len_valid_loader)
-                input_vars = [input_vars[0].double().cuda(), input_vars[1].double().cuda(), input_vars[2].double().cuda(), states.double().cuda()]
+                input_vars = [input_vars[0].double().cuda(), input_vars[1].cuda(), input_vars[2].double().cuda(), states]
 
 
-            output, _ = model(*input_vars)
+            output = model(*input_vars)
             output = output.cpu().detach().numpy().reshape(-1)
 
             target = one_seqs_cmpd_y_group[target_name]
@@ -251,10 +252,10 @@ def run_train(model,
             
             elif type(model) == SQembLSTM_CPenc_Model: # L
                 states = model.initial_hidden_vars(len_test_loader)
-                input_vars = [input_vars[0].double().cuda(), input_vars[1].double().cuda(), input_vars[2].double().cuda(), states.double().cuda()]
+                input_vars = [input_vars[0].double().cuda(), input_vars[1].cuda(), input_vars[2].double().cuda(), states]
 
 
-            output, _ = model(*input_vars)
+            output = model(*input_vars)
             output = output.cpu().detach().numpy().reshape(-1)
             
             target = one_seqs_cmpd_y_group[target_name]

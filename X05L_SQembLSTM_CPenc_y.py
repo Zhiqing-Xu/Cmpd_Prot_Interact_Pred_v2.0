@@ -103,6 +103,7 @@ from Z05_split_data import *
 from Z05_run_train import run_train
 
 from Z05A_Conv import *
+from Z05L_LSTM import *
 
 #--------------------------------------------------#
 from ZX02_nn_utils import *
@@ -139,7 +140,7 @@ if __name__ == "__main__":
                         "Ki_select",          # 11
                         "KM_BRENDA",          # 12
                         ] 
-    dataset_nme      = dataset_nme_list[11]
+    dataset_nme      = dataset_nme_list[6]
     data_folder      = Path("X_DataProcessing/")
     properties_file  = "X00_" + dataset_nme + "_compounds_properties_list.p"
     MSA_info_file    = "X03_" + dataset_nme + "_MSA_info.p"
@@ -149,8 +150,9 @@ if __name__ == "__main__":
                           "X02A_" + dataset_nme + "_ECFP4_encodings_dict.p", 
                           "X02A_" + dataset_nme + "_ECFP6_encodings_dict.p", 
                           "X02A_" + dataset_nme + "_JTVAE_encodings_dict.p", 
-                          "X02A_" + dataset_nme + "_MorganFP_encodings_dict.p",]
-    encoding_file = encoding_file_list[2]
+                          "X02A_" + dataset_nme + "_MorganFP_encodings_dict.p",
+                          "X02B_" + dataset_nme + "_MgFP6_encodings_dict.p"]
+    encoding_file = encoding_file_list[5]
     #--------------------------------------------------#
     seqs_fasta_file     =  "X00_" + dataset_nme + ".fasta"
     embedding_file_list = ["X03_" + dataset_nme + "_embedding_ESM_1B.p", 
@@ -185,8 +187,8 @@ if __name__ == "__main__":
     # Prediction NN settings
     NN_type_list   = ["Reg", "Clf"]
     NN_type        = NN_type_list[0]
-    epoch_num      = 100
-    batch_size     = 192
+    epoch_num      = 50
+    batch_size     = 32
     learning_rate  =  [0.01        , # 0
                        0.005       , # 1
                        0.002       , # 2
@@ -206,7 +208,7 @@ if __name__ == "__main__":
     hid_dim    = 256    # 256
     latent_dim   = 244      # 244
     out_dim    = 1      # 2
-    num_layers   = 3      # 3
+    num_layers   = 1      # 3
     last_hid = 1024 # 1024
     dropout    = 0.1     # 0
     #====================================================================================================#
@@ -233,8 +235,8 @@ if __name__ == "__main__":
     if os.name == 'nt' or platform == 'win32':
         pass
     else:
-        print("Running on Linux, change epoch number to 200")
-        epoch_num = 200
+        print("Running on Linux, change epoch number to 100")
+        epoch_num = 100
     #====================================================================================================#
     # Results
     results_folder = Path("X_DataProcessing/" + Step_code +"intermediate_results/")
